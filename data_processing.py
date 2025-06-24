@@ -1,6 +1,6 @@
 import numpy as np
 from astropy.coordinates import SkyCoord, FK5
-import astropy.units as au
+from astropy import units as u
 
 def get_flat_data(data_list):
     """
@@ -30,8 +30,8 @@ def get_relative_coords(ra, dec, rgal):
     
     ind_center = np.where(rgal == 0)[0][0]  # get index of center
     coords_ref = [str(ra[ind_center]) + ' ' + str(dec[ind_center])]
-    skycoords_ref = SkyCoord(coords_ref, frame=FK5, unit=(au.deg, au.deg))
-    coords_map = (ra, dec) *au.deg
+    skycoords_ref = SkyCoord(coords_ref, frame=FK5, unit=(u.deg, u.deg))
+    coords_map = (ra, dec) *u.deg
     skycoords_map = SkyCoord(ra=coords_map[0], dec=coords_map[1], frame=FK5)
     aframe = skycoords_ref.skyoffset_frame()
     delta_ra = skycoords_map.transform_to(aframe).lon.arcsec
@@ -51,8 +51,8 @@ def get_relative_coords2(ra, dec, ra_center=287.6353625, dec_center=9.0934811):
     
     ind_center = np.where( (ra == ra_center) & (dec == dec_center) )[0][0] # get index of center
     coords_ref = [str(ra[ind_center]) + ' ' + str(dec[ind_center])]
-    skycoords_ref = SkyCoord(coords_ref, frame=FK5, unit=(au.deg, au.deg))
-    coords_map = (ra, dec) *au.deg
+    skycoords_ref = SkyCoord(coords_ref, frame=FK5, unit=(u.deg, u.deg))
+    coords_map = (ra, dec) *u.deg
     skycoords_map = SkyCoord(ra=coords_map[0], dec=coords_map[1], frame=FK5)
     aframe = skycoords_ref.skyoffset_frame()
     delta_ra = skycoords_map.transform_to(aframe).lon.arcsec

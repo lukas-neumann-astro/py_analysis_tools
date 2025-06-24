@@ -449,7 +449,7 @@ def get_bins_ratio_1d(xdata, y1data, y2data, xdata_err, y1data_err, y2data_err, 
             # lower limit if SNR(y2) < SNR_limit and SNR(y) < SNR_limit
             if (y2[i]/sigma2_err_mean < SNR_limit) & (y[i]/sigma[i] < SNR_limit):
                 y_ll[i] = y1[i] / (SNR_limit * sigma2_err_mean)
-            
+
         significant[i] = y[i] / sigma[i]  # signal-to-noise ratio
 
         neg[i] = len(np.where( (y1data[ids]<=0) | (y2data[ids]<=0) )[0])
@@ -460,7 +460,7 @@ def get_bins_ratio_1d(xdata, y1data, y2data, xdata_err, y1data_err, y2data_err, 
         
         if isnan[i] > 0: 
             print('[Warning] Bin contains nan values that should have been taken care of!')
-    
+
     id_ = ~np.isnan(significant)  # indices where signal-to-noise ratio is a valid number
     significant = significant[id_]
     sigma = sigma[id_]

@@ -31,6 +31,46 @@ def get_NH2_from_Sigmagas(Sigma_gas):
     return NH2
 
 
+def get_molecular_gas_surface_density_Heiderman2010(Tpeak_12co, Tpeak_13co, I_13co, R_h2_13co=4e5):
+    """
+    Computes molecular gas surface density following Heidermann+10 (Equ. 11-14).
+    
+    Input:
+    - Tpeak_12co  : 12CO(1-0) peak brightness temperature [K]
+    - e_Tpeak_12co  : uncertainty; 12CO(1-0) peak brightness temperature [K]
+    - 
+
+    
+    Output: 
+    - Sd_mol : moleciular gas surface density [Msun/pc^2]
+    """
+    # compute excitation temperature (assuming 12CO is optically thick)
+    T_ex = 5.5 / (np.log(1 + 5.5 / (Tpeak_12co + 0.82))) * u.K
+    # e_T_ex = tbd
+
+    # compute 13CO optical depth
+    tau_13co = -np.log(1 - Tpeak_13co/5.3 * (1/(np.exp(5.3*u.K/T_ex)-1) - 0.16)**(-1))
+    # e_tau_13co = tbd
+
+    # compute 13CO column density
+    N_13co = 2.6e14 * (tau_13co/(1-np.exp(-tau_13co))) * (I_13co/(1-np.exp(-5.3*u.K/T_ex))) * u.cm**-2
+    # e_N_13co = tbd
+
+    # compute H2 column density (assuming a fixed H2-13CO ratio)
+    N_H2 = R_h2_13co * N_13co # [cm-2]
+    # N_H2 = R_h2_13co * e_N_13co # [cm-2]
+
+    # mean particle weight
+    mu = 2.8  # mean particle weight per H2 (Kauffmann+08)
+    mH = 1.0079 * c.u  # atomic hydrogen mass
+
+    # convert H2 column density to molecular gas surface density
+    Sd_mol = (N_H2 * mu * mH).to(u.Msun/u.pc**2)
+    # e_Sd_mol = (e_N_H2 * mu * mH).to(u.Msun/u.pc**2)
+
+    return Sd_mol
+
+
 
 def get_atomic_gas_surface_density(W_21cm, W_21cm_err):
     """
